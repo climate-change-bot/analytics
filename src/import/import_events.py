@@ -35,6 +35,8 @@ def import_events():
     db_password = os.environ.get('DB_PASSWORD', 'localhost')
     db_host = os.environ.get('DB_HOST', '127.0.0.1')
     db_port = os.environ.get('DB_PORT', '5432')
+    output_file_name = os.environ.get('OUTPUT_FILE_NAME', 'conversations.xlsx')
+
     with create_connection(db_name, db_user, db_password, db_host, db_port) as con:
         sql_query = pd.read_sql("SELECT * FROM events WHERE type_name = 'user' OR type_name = 'bot'", con)
         df = pd.DataFrame(sql_query,
@@ -52,8 +54,7 @@ def import_events():
 
         if not os.path.exists(DATA_DIRECTORY):
             os.mkdir(DATA_DIRECTORY)
-        with pd.ExcelWriter(f'{DATA_DIRECTORY}conversations.xlsx', engine="openpyxl", mode="a",
-                            if_sheet_exists="replace") as writer:
+        with pd.ExcelWriter(f'{DATA_DIRECTORY}{output_file_name}', engine="openpyxl", mode="w") as writer:
             df.to_excel(writer, sheet_name='conversations')
 
 
