@@ -50,6 +50,9 @@ def import_events():
         df['input_channel'] = df[['data']].apply(lambda x: add_data(x, 'input_channel'), axis=1)
         df['intent_ranking'] = df[['data']].apply(add_model_intent_ranking, axis=1)
 
+        df['number_of_chats'] = df.groupby('sender_id').sender_id.transform('size')
+        df = df[df['number_of_chats'] > 2]
+
         df = df.drop('data', axis=1)
 
         if not os.path.exists(DATA_DIRECTORY):

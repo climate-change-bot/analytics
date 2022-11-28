@@ -11,7 +11,8 @@ def get_conversations(df_conversations):
     return html.Div(
         [
             dbc.ListGroup(
-                [dbc.ListGroupItem(f"{_get_title(x[1]['timestamp'])} - {x[1]['number_of_chats']}") for x in
+                [dbc.ListGroupItem(f"{_get_title(x[1]['timestamp'])} - {x[1]['number_of_chats']}",
+                                   href=f"/conversations/{x[1]['sender_id']}") for x in
                  df_conversations.iterrows()]
             )
         ]
