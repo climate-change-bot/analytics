@@ -3,7 +3,7 @@ import pandas as pd
 import json
 from connect_db import create_connection
 
-DATA_DIRECTORY = './../../data/'
+DATA_DIRECTORY = './../../../../data/'
 
 
 def add_data(cell, name):

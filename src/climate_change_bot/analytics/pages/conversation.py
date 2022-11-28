@@ -1,8 +1,8 @@
 import dash
 from dash import html
 
-from src import df
-from src.components.conversation_messages import get_conversation_messages
+from climate_change_bot import df
+from climate_change_bot.analytics.components.conversation_messages import get_conversation_messages
 
 dash.register_page(__name__, path_template="/conversations/<sender_id>")
 
