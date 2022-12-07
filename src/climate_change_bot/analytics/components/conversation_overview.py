@@ -3,17 +3,34 @@ from dash import html
 from datetime import datetime
 
 
-def _get_title(timestamp):
-    return datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
+def _get_time(timestamp):
+    return datetime.fromtimestamp(timestamp).strftime('%H:%M:%S')
+
+
+def _get_date(timestamp):
+    return timestamp.strftime('%d.%m.%Y')
+
+
+def _get_list_group(list_group_items):
+    final_list_group_items = []
+    time = datetime.max
+    for list_group_item in list_group_items:
+        next_time = datetime.fromtimestamp(list_group_item['timestamp'])
+        if next_time.date() != time.date():
+            time = next_time
+            final_list_group_items.append(
+                dbc.ListGroupItem([html.H5(f"{_get_date(time)}", className="mb-1")], color="primary"))
+        final_list_group_items.append(
+            dbc.ListGroupItem(f"{_get_time(list_group_item['timestamp'])} - {list_group_item['number_of_chats']}",
+                              href=f"/conversations/{list_group_item['sender_id']}")
+        )
+    return final_list_group_items
 
 
 def get_conversations(df_conversations):
+    list_group_items = _get_list_group([x[1] for x in df_conversations.iterrows()])
     return html.Div(
         [
-            dbc.ListGroup(
-                [dbc.ListGroupItem(f"{_get_title(x[1]['timestamp'])} - {x[1]['number_of_chats']}",
-                                   href=f"/conversations/{x[1]['sender_id']}") for x in
-                 df_conversations.iterrows()]
-            )
+            dbc.ListGroup(list_group_items)
         ]
     )
