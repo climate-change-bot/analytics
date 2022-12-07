@@ -55,6 +55,8 @@ def import_events():
 
         df = df.drop('data', axis=1)
 
+        df = df.sort_values(by='timestamp')
+
         if not os.path.exists(DATA_DIRECTORY):
             os.mkdir(DATA_DIRECTORY)
         with pd.ExcelWriter(f'{DATA_DIRECTORY}{output_file_name}', engine="openpyxl", mode="w") as writer:
