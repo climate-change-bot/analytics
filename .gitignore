@@ -131,3 +131,7 @@ dmypy.json
 
 #custon
 data
+bin
+etc
+share
+.idea
