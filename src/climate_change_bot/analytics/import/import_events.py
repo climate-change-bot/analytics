@@ -29,6 +29,18 @@ def add_model_intent_ranking(cell):
         return data['parse_data']['intent_ranking']
 
 
+def add_conversation_id(df):
+    conversation_id = 0
+    conversation_ids = []
+    last_sender_id = None
+    for row in df.to_dict('records'):
+        if last_sender_id != row['sender_id']:
+            conversation_id += 1
+            last_sender_id = row['sender_id']
+        conversation_ids.append(conversation_id)
+    df['conversation_id'] = conversation_ids
+
+
 def import_events():
     db_name = os.environ.get('DB_NAME', 'rasa')
     db_user = os.environ.get('DB_User', 'rasa')
@@ -56,6 +68,8 @@ def import_events():
         df = df.drop('data', axis=1)
 
         df = df.sort_values(by='timestamp')
+
+        add_conversation_id(df)
 
         if not os.path.exists(DATA_DIRECTORY):
             os.mkdir(DATA_DIRECTORY)
