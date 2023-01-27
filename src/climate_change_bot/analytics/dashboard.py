@@ -3,8 +3,17 @@ import dash_bootstrap_components as dbc
 
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP], use_pages=True)
 
+navbar = dbc.NavbarSimple(
+    children=[],
+    brand="Conversations",
+    brand_href="/",
+    color="primary",
+    dark=True,
+    fluid=True,
+)
+
 app.layout = html.Div(children=[
-    html.H1('Chatbot Analysis'),
+    navbar,
     dash.page_container
 ])
 
