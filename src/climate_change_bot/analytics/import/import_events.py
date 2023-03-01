@@ -12,6 +12,15 @@ def add_data(cell, name):
         return data[name]
 
 
+def add_text(cell):
+    data = json.loads(cell[0])
+    if 'text' in data and data['text']:
+        return data['text']
+    elif 'data' in data and 'custom' in data['data'] and 'openai' in data['data']['custom']:
+        return data['data']['custom']['text']
+    print(f'not text found')
+
+
 def add_model_id(cell):
     data = json.loads(cell[0])
     return data['metadata']['model_id']
@@ -56,7 +65,7 @@ def import_events():
 
         # Clean Data
         df['model_id'] = df[['data']].apply(add_model_id, axis=1)
-        df['text'] = df[['data']].apply(lambda x: add_data(x, 'text'), axis=1)
+        df['text'] = df[['data']].apply(lambda x: add_text(x), axis=1)
         df['intent'] = df[['data']].apply(lambda x: add_model_intent(x, 'name'), axis=1)
         df['intent_confidence'] = df[['data']].apply(lambda x: add_model_intent(x, 'confidence'), axis=1)
         df['input_channel'] = df[['data']].apply(lambda x: add_data(x, 'input_channel'), axis=1)
