@@ -5,7 +5,7 @@ app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP], use_pages=True)
 
 navbar = dbc.NavbarSimple(
     children=[],
-    brand="Conversations",
+    brand="Climate Change Bot Analytics",
     brand_href="/",
     color="primary",
     dark=True,

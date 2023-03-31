@@ -13,18 +13,25 @@ def _get_intents(intents):
     return intents[1:]
 
 
+def get_side_bar(df_conversation_messages):
+    return html.Div(
+        [
+            html.P(html.B(f"{df_conversation_messages.iloc[0]['sender_id']}")),
+            html.P(
+                f"Start: {_get_time(df_conversation_messages.iloc[0]['timestamp'])}",
+                className="card-text",
+            ),
+            html.Hr()
+        ]
+    )
+
+
 def get_conversation_messages(df_conversation_messages):
     return html.Div(
         [
             dbc.Card(
                 dbc.CardBody(
                     [
-                        html.H4(f"Conversation ID: {df_conversation_messages.iloc[0]['sender_id']}"
-                                , className="card-title"),
-                        html.P(
-                            f"Start: {_get_time(df_conversation_messages.iloc[0]['timestamp'])}",
-                            className="card-text",
-                        ),
                         dbc.CardLink("Previous", href=f"{df_conversation_messages.iloc[0]['conversation_id'] - 1}"),
                         dbc.CardLink("Next", href=f"{df_conversation_messages.iloc[0]['conversation_id'] + 1}")
                     ]
@@ -47,6 +54,5 @@ def get_conversation_messages(df_conversation_messages):
                     if x[1]["type_name"] == "user" else None
                 ], color="primary" if x[1]["type_name"] == "user" else "secondary") for x in
                     df_conversation_messages.iterrows()]
-            )
-        ]
+            )]
     )
