@@ -13,13 +13,18 @@ def _get_intents(intents):
     return intents[1:]
 
 
-def get_side_bar(df_conversation_messages):
+def get_side_bar(df_conversation_messages, chatbot_versions):
     return html.Div(
         [
             html.P(html.B(f"{df_conversation_messages.iloc[0]['sender_id']}")),
             html.P(
-                f"Start: {_get_time(df_conversation_messages.iloc[0]['timestamp'])}",
-                className="card-text",
+                f"Start: {_get_time(df_conversation_messages.iloc[0]['timestamp'])}"
+            ),
+            html.P(
+                f"Chatbot Version: {chatbot_versions['chatbot_version']}"
+            ),
+            html.P(
+                f"Rasa Version: {chatbot_versions['rasa_version']}"
             ),
             html.Hr()
         ]
