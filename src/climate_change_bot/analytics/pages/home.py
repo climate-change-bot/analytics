@@ -1,5 +1,7 @@
 import dash
-from dash import html
+from dash import html, dcc
+import pandas as pd
+import plotly.express as px
 import dash_bootstrap_components as dbc
 
 from climate_change_bot.analytics.pages.base import get_content, get_sidebar
@@ -71,9 +73,24 @@ card_3 = dbc.Card(
         ],
     ),
 )
+df['timestamp_datetime'] = pd.to_datetime(df['timestamp'], unit='s')
+df['date'] = df['timestamp_datetime'].dt.date
+daily_conversations = df.groupby(['date'])['sender_id'].nunique().reset_index().rename(
+    columns={'sender_id': 'conversations'})
+
+fig = px.bar(daily_conversations, x='date', y='conversations')
+fig.update_xaxes(title=None)
+fig.update_layout(
+    dragmode=None,
+    xaxis=dict(title=None, fixedrange=True),
+    yaxis=dict(title='Number of Conversations', fixedrange=True),
+    plot_bgcolor='white',
+    font=dict(family='Arial', size=12, color='black')
+)
 
 layout_content = [
-    dbc.Row([dbc.Col(card), dbc.Col(card_2), dbc.Col(card_3)])
+    dbc.Row([dbc.Col(card), dbc.Col(card_2), dbc.Col(card_3)], style={'padding-bottom': 20}),
+    dbc.Row([dbc.Card(dbc.CardBody(dcc.Graph(figure=fig)))], style={'padding-left': 11, 'padding-right': 11})
 ]
 
 content = get_content(layout_content)
