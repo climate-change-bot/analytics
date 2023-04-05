@@ -25,7 +25,8 @@ def get_sidebar(nav_header=[]):
             dbc.Nav(
                 [
                     dbc.NavLink("Home", href="/", active="exact"),
-                    dbc.NavLink("Conversations", href="/conversations", active="exact")
+                    dbc.NavLink("Conversations", href="/conversations", active="exact"),
+                    dbc.NavLink("Intents", href="/intents", active="exact")
                 ],
                 vertical=True,
                 pills=True,
