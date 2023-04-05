@@ -4,8 +4,7 @@ from dash import html
 from climate_change_bot import df
 from climate_change_bot import get_version
 from climate_change_bot.analytics.pages.base import get_content, get_sidebar
-from climate_change_bot.analytics.components.conversation_messages import get_conversation_messages
-from climate_change_bot.analytics.components.conversation_messages import get_side_bar
+from climate_change_bot.analytics.components.conversation.messages import get_side_bar, get_conversation_messages
 
 dash.register_page(__name__, path_template="/conversation/<conversation_id>")
 

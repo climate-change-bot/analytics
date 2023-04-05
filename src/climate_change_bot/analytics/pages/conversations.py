@@ -1,7 +1,7 @@
 import dash
 from dash import html
 
-from climate_change_bot.analytics.components.conversation_overview import get_conversations
+from climate_change_bot.analytics.components.conversation.overview import get_conversations
 from climate_change_bot.analytics.pages.base import get_content, get_sidebar
 from climate_change_bot import df
 
