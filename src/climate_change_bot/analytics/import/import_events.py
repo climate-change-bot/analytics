@@ -50,6 +50,11 @@ def add_conversation_id(df):
     df['conversation_id'] = conversation_ids
 
 
+def _get_latest_timestamp(output_file_name):
+    df_output = pd.read_excel(output_file_name, index_col=0)
+    return df_output['timestamp'].max() + 0.000001
+
+
 def import_events():
     db_name = os.environ.get('DB_NAME', 'rasa')
     db_user = os.environ.get('DB_User', 'rasa')
@@ -57,9 +62,12 @@ def import_events():
     db_host = os.environ.get('DB_HOST', '127.0.0.1')
     db_port = os.environ.get('DB_PORT', '5432')
     output_file_name = os.environ.get('OUTPUT_FILE_NAME', 'conversations.xlsx')
+    last_timestamp = _get_latest_timestamp(f'{DATA_DIRECTORY}{output_file_name}')
 
     with create_connection(db_name, db_user, db_password, db_host, db_port) as con:
-        sql_query = pd.read_sql("SELECT * FROM events WHERE type_name = 'user' OR type_name = 'bot'", con)
+        sql_query = pd.read_sql(
+            f"SELECT * FROM events WHERE (type_name = 'user' OR type_name = 'bot') AND timestamp > {last_timestamp}",
+            con)
         df = pd.DataFrame(sql_query,
                           columns=['sender_id', 'type_name', 'timestamp', 'intent_name', 'action_name', 'data'])
 
@@ -77,6 +85,10 @@ def import_events():
         df = df.drop('data', axis=1)
 
         df = df.sort_values(by='timestamp')
+
+        df_previous = pd.read_excel(f'{DATA_DIRECTORY}{output_file_name}', index_col=0)
+
+        df = pd.concat([df_previous, df])
 
         add_conversation_id(df)
 
