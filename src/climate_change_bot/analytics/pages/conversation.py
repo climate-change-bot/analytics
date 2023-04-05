@@ -11,12 +11,13 @@ dash.register_page(__name__, path_template="/conversation/<conversation_id>")
 
 
 def layout(conversation_id=None):
-    df_conversation = df[df['conversation_id'] == int(conversation_id)]
-    model_versions = get_version(df_conversation.iloc[0]['model_id'])
+    if conversation_id:
+        df_conversation = df[df['conversation_id'] == int(conversation_id)]
+        model_versions = get_version(df_conversation.iloc[0]['model_id'])
 
-    content = get_content([get_conversation_messages(df_conversation)])
-    sidebar = get_sidebar(get_side_bar(df_conversation, model_versions))
+        content = get_content([get_conversation_messages(df_conversation)])
+        sidebar = get_sidebar(get_side_bar(df_conversation, model_versions))
 
-    return html.Div(children=[
-        sidebar, content
-    ])
+        return html.Div(children=[
+            sidebar, content
+        ])
