@@ -39,4 +39,4 @@ def get_intents():
 def get_chatgpt_intents(df, intents):
     intents_as_list = get_intents_as_list(intents)
     df_chatgpt = df[(df.type_name == 'user') & (df.timestamp > 1677063600) & (df.intent_name == 'nlu_fallback')]
-    return [text for text in df_chatgpt['text'].tolist() if text.lower() not in intents_as_list]
+    return [text for text in df_chatgpt['text'].tolist() if type(text) == 'str' and text.lower() not in intents_as_list]
