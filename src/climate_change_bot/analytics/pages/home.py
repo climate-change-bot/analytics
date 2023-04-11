@@ -33,6 +33,8 @@ def get_turns(df_turns):
     return turns, max_turns
 
 
+number_of_quiz = len(df[df.intent_name == 'start_quiz'])
+
 number_of_conversations = len(df['sender_id'].value_counts())
 number_of_answers = len(df[df.type_name == 'bot'])
 number_of_max_answers = df[df.type_name == 'bot'].groupby('sender_id')['sender_id'].count().max()
@@ -43,13 +45,22 @@ dash.register_page(__name__, path='/')
 card = dbc.Card(
     dbc.CardBody(
         [
+            html.Div("Quiz", style={'fontSize': 14}),
+            html.H3(number_of_quiz, className='text-center')
+        ],
+    ),
+)
+
+card_2 = dbc.Card(
+    dbc.CardBody(
+        [
             html.Div("Conversations", style={'fontSize': 14}),
             html.H3(number_of_conversations, className='text-center')
         ],
     ),
 )
 
-card_2 = dbc.Card(
+card_3 = dbc.Card(
     dbc.CardBody(
         [
             html.Div("Answers", style={'fontSize': 14}),
@@ -62,7 +73,7 @@ card_2 = dbc.Card(
     ),
 )
 
-card_3 = dbc.Card(
+card_4 = dbc.Card(
     dbc.CardBody(
         [
             html.Div("Turns", style={'fontSize': 14}),
@@ -73,8 +84,7 @@ card_3 = dbc.Card(
         ],
     ),
 )
-df['timestamp_datetime'] = pd.to_datetime(df['timestamp'], unit='s')
-df['date'] = df['timestamp_datetime'].dt.date
+
 daily_conversations = df.groupby(['date'])['sender_id'].nunique().reset_index().rename(
     columns={'sender_id': 'conversations'})
 
@@ -89,7 +99,7 @@ fig.update_layout(
 )
 
 layout_content = [
-    dbc.Row([dbc.Col(card), dbc.Col(card_2), dbc.Col(card_3)], style={'padding-bottom': 20}),
+    dbc.Row([dbc.Col(card), dbc.Col(card_2), dbc.Col(card_3), dbc.Col(card_4)], style={'padding-bottom': 20}),
     dbc.Row([dbc.Card(dbc.CardBody(dcc.Graph(figure=fig)))], style={'padding-left': 11, 'padding-right': 11})
 ]
 

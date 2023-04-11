@@ -14,6 +14,9 @@ with open(_model_versions_name) as csv_file:
 
 df = pd.read_excel(_file_name)
 
+df['timestamp_datetime'] = pd.to_datetime(df['timestamp'], unit='s')
+df['date'] = df['timestamp_datetime'].dt.date
+
 
 def get_version(model_id):
     if model_id in _model_versions:
