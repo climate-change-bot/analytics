@@ -1,22 +1,26 @@
 import dash_bootstrap_components as dbc
-from dash import html, dash_table
+from dash import html, dcc
+import plotly.express as px
 
 
 def get_ranking(df_intents):
-    rows = [html.Tr([html.Td(x['intent_name']), html.Td(x['counts'])]) for x in df_intents.to_dict('records')]
-
-    table_body = [html.Tbody(rows)]
-
-    table = dbc.Table(table_body, striped=True)
+    df_intents_sorted = df_intents.sort_values('counts', ascending=True)
+    fig = px.bar(df_intents_sorted, x='counts', y='intent_name', orientation='h')
+    fig.update_layout(
+        dragmode=None,
+        xaxis=dict(title="Counts", fixedrange=True),
+        yaxis=dict(title='Intent Name', fixedrange=True),
+        plot_bgcolor='white',
+        bargap=0.5,
+        font=dict(family='Arial', size=12, color='black'),
+        height=700
+    )
+    graph = dcc.Graph(id='intent-ranking-chart', figure=fig)
 
     return html.Div(
         [
             dbc.Card([
                 dbc.CardHeader([html.H5("Intent Ranking", className="mb-1")]),
-                dbc.CardBody([table],
-                             style={
-                                 "maxHeight": "400px",
-                                 "overflowY": "auto"
-                             })]
+                dbc.CardBody([graph])]
             )
         ], style={"padding-bottom": "20px"})
