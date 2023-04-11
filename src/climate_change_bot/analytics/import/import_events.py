@@ -41,12 +41,14 @@ def add_model_intent_ranking(cell):
 def add_conversation_id(df):
     conversation_id = 0
     conversation_ids = []
-    last_sender_id = None
+    sender_conversation_id = {}
     for row in df.to_dict('records'):
-        if last_sender_id != row['sender_id']:
+        if row['sender_id'] in sender_conversation_id:
+            conversation_ids.append(sender_conversation_id[row['sender_id']])
+        else:
             conversation_id += 1
-            last_sender_id = row['sender_id']
-        conversation_ids.append(conversation_id)
+            sender_conversation_id[row['sender_id']] = conversation_id
+            conversation_ids.append(conversation_id)
     df['conversation_id'] = conversation_ids
 
 
