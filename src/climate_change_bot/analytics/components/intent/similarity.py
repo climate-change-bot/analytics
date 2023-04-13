@@ -31,7 +31,7 @@ def get_similarities(intents, all_chatgpt_intents):
         index_2 = paraphrase[2]
         intent_name, similarity = _intent_to_chatgpt(cos_distance, index_1, index_2, combined, len(intents_as_list),
                                                      intents)
-        if intent_name and similarity['cos_distance'] >= 0.6:
+        if intent_name and similarity['cos_distance'] >= 0.7:
             if intent_name in similarities:
                 similarities[intent_name].append(similarity)
             else:

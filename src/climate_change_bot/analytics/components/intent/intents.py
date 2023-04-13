@@ -9,10 +9,17 @@ _nlu_dir = os.environ.get('CHATBOT_NLU_DIR', '/home/roger/Documents/HSLU/Mastert
 def _clean_intents(intents):
     for intent in intents:
         intent['examples'] = re.sub(r'\[(.*?)\]\{.*?\}', r'\1', intent['examples'])
+        intent['examples'] = re.sub(r'[\?!,.:]', '', intent['examples'])
+        intent['examples'] = intent['examples'].lower()
         intent['examples'] = intent['examples'].split('\n-')
         for index, example in enumerate(intent['examples']):
             intent['examples'][index] = example.lstrip('-').strip().lower()
     return intents
+
+
+def _clean_text(text):
+    text = text.lower()
+    return re.sub(r'[\?!,.:]', '', text)
 
 
 def get_intents_as_list(intents):
@@ -39,4 +46,5 @@ def get_intents():
 def get_chatgpt_intents(df, intents):
     intents_as_list = get_intents_as_list(intents)
     df_chatgpt = df[(df.type_name == 'user') & (df.timestamp > 1677063600) & (df.intent_name == 'nlu_fallback')]
-    return [text for text in df_chatgpt['text'].tolist() if type(text) == 'str' and text.lower() not in intents_as_list]
+    return [text for text in df_chatgpt['text'].tolist() if
+            isinstance(text, str) and _clean_text(text) not in intents_as_list]

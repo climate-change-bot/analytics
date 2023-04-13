@@ -23,11 +23,9 @@ def get_similarity_card(similarities):
                 dbc.CardHeader([html.H5("Intent Similarity to Request sent to ChatGPT", className="mb-1")]),
                 dbc.CardBody(
                     [
-                        # html.H5("Intent Similarity to Request sent to ChatGPT", className="mb-1",
-                        #         style={"padding-bottom": "8px"}),
                         dbc.Accordion(items, always_open=True)
 
                     ], style={
-                        "maxHeight": "400px",
+                        "maxHeight": "800px",
                         "overflowY": "auto"
                     })])])
