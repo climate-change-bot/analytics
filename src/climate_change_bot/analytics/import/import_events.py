@@ -2,6 +2,7 @@ import os
 import pandas as pd
 import json
 from connect_db import create_connection
+from sentiment import add_sentiment
 
 DATA_DIRECTORY = './../../../../data/'
 
@@ -91,11 +92,14 @@ def import_events():
 
         df = df.sort_values(by='timestamp')
 
+        add_sentiment(df)
+
         if os.path.exists(output_file_name):
             df_previous = pd.read_excel(output_file_name, index_col=0)
             df = pd.concat([df_previous, df])
 
         add_conversation_id(df)
+
 
         if not os.path.exists(DATA_DIRECTORY):
             os.mkdir(DATA_DIRECTORY)
