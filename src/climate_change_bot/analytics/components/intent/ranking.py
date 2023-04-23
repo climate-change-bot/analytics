@@ -5,6 +5,8 @@ import plotly.express as px
 
 def get_ranking(df_intents):
     df_intents_sorted = df_intents.sort_values('counts', ascending=True)
+    df_intents_sorted = df_intents_sorted[(df_intents_sorted.intent_name != 'quiz_answer') &
+                                          (df_intents_sorted.intent_name != 'start_quiz')]
     fig = px.bar(df_intents_sorted, x='counts', y='intent_name', orientation='h')
     fig.update_layout(
         dragmode=None,
