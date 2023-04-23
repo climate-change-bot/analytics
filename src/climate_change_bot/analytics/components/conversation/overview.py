@@ -23,8 +23,9 @@ def _get_list_group(list_group_items):
                 dbc.ListGroupItem([html.H5(f"{_get_date(time)}", className="mb-1")], color="primary"))
         final_list_group_items.append(
             dbc.ListGroupItem(
-                f"{_get_time(list_group_item['timestamp'])} - messages: {list_group_item['number_of_chats']} - "
-                f"chatbot_version: {get_version(list_group_item['model_id'])['chatbot_version']}",
+                f"{_get_time(list_group_item['timestamp'])} - has quiz: {list_group_item['is_quiz']} - "
+                f"messages: {list_group_item['number_of_chats']} - "
+                f"chatbot version: {get_version(list_group_item['model_id'])['chatbot_version']}",
                 href=f"/conversation/{list_group_item['conversation_id']}")
         )
     return final_list_group_items
