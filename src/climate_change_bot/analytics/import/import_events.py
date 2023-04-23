@@ -3,6 +3,7 @@ import pandas as pd
 import json
 from connect_db import create_connection
 from sentiment import add_sentiment
+from quiz import add_column_is_quiz
 
 DATA_DIRECTORY = './../../../../data/'
 
@@ -19,7 +20,7 @@ def add_text(cell):
         return data['text']
     elif 'data' in data and 'custom' in data['data'] and 'openai' in data['data']['custom']:
         return data['data']['custom']['text']
-    print(f'not text found')
+    return ""
 
 
 def add_model_id(cell):
@@ -40,6 +41,7 @@ def add_model_intent_ranking(cell):
 
 
 def add_conversation_id(df):
+    print("Add conversations ids")
     conversation_id = 0
     conversation_ids = []
     sender_conversation_id = {}
@@ -70,6 +72,8 @@ def import_events():
     output_file_name = f'{DATA_DIRECTORY}{output_file_name}'
     last_timestamp = _get_latest_timestamp(output_file_name)
 
+    print("Loading from database")
+
     with create_connection(db_name, db_user, db_password, db_host, db_port) as con:
         sql_query = pd.read_sql(
             f"SELECT * FROM events WHERE (type_name = 'user' OR type_name = 'bot') AND timestamp > {last_timestamp}",
@@ -78,6 +82,7 @@ def import_events():
                           columns=['sender_id', 'type_name', 'timestamp', 'intent_name', 'action_name', 'data'])
 
         # Clean Data
+        print("Clean data")
         df['model_id'] = df[['data']].apply(add_model_id, axis=1)
         df['text'] = df[['data']].apply(lambda x: add_text(x), axis=1)
         df['intent'] = df[['data']].apply(lambda x: add_model_intent(x, 'name'), axis=1)
@@ -92,6 +97,7 @@ def import_events():
 
         df = df.sort_values(by='timestamp')
 
+        add_column_is_quiz(df)
         add_sentiment(df)
 
         if os.path.exists(output_file_name):
@@ -99,7 +105,6 @@ def import_events():
             df = pd.concat([df_previous, df])
 
         add_conversation_id(df)
-
 
         if not os.path.exists(DATA_DIRECTORY):
             os.mkdir(DATA_DIRECTORY)
