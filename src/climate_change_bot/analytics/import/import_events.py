@@ -4,6 +4,7 @@ import json
 from connect_db import create_connection
 from sentiment import add_sentiment
 from quiz import add_column_is_quiz
+from version import add_model_and_rasa_version
 
 DATA_DIRECTORY = './../../../../data/'
 
@@ -97,6 +98,7 @@ def import_events():
 
         df = df.sort_values(by='timestamp')
 
+        add_model_and_rasa_version(df)
         add_column_is_quiz(df)
         add_sentiment(df)
 
