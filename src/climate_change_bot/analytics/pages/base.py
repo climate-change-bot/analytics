@@ -19,24 +19,21 @@ CONTENT_STYLE = {
 
 
 def get_sidebar(nav_header=[]):
-    return html.Div(
-        [
-            nav_header,
-            dbc.Nav(
-                [
-                    dbc.NavLink("Home", href="/", active="exact"),
-                    dbc.NavLink("Conversations", href="/conversations", active="exact"),
-                    dbc.NavLink("Quiz", href="/quiz", active="exact"),
-                    dbc.NavLink("Intents", href="/intents", active="exact"),
-                    dbc.NavLink("Topic", href="/topic", active="exact")
-                ],
-                vertical=True,
-                pills=True,
-            ),
-        ],
-        style=SIDEBAR_STYLE,
-    )
+    return html.Div(id="page-sidebar", children=[
+        nav_header,
+        dbc.Nav(
+            [
+                dbc.NavLink("Home", href="/", active="exact"),
+                dbc.NavLink("Conversations", href="/conversations", active="exact"),
+                dbc.NavLink("Quiz", href="/quiz", active="exact"),
+                dbc.NavLink("Intents", href="/intents", active="exact"),
+                dbc.NavLink("Topic", href="/topic", active="exact")
+            ],
+            vertical=True,
+            pills=True,
+        ),
+    ], style=SIDEBAR_STYLE)
 
 
-def get_content(children):
-    return html.Div(id="page-content", style=CONTENT_STYLE, children=children)
+def get_content(id_name, children):
+    return html.Div(id=id_name, style=CONTENT_STYLE, children=children)

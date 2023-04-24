@@ -1,7 +1,6 @@
 import dash_bootstrap_components as dbc
 from dash import html
 from datetime import datetime
-from climate_change_bot import get_version
 
 
 def _get_time(timestamp):
@@ -25,7 +24,7 @@ def _get_list_group(list_group_items):
             dbc.ListGroupItem(
                 f"{_get_time(list_group_item['timestamp'])} - has quiz: {list_group_item['is_quiz']} - "
                 f"messages: {list_group_item['number_of_chats']} - "
-                f"chatbot version: {get_version(list_group_item['model_id'])['chatbot_version']}",
+                f"chatbot version: {list_group_item['chatbot_version']}",
                 href=f"/conversation/{list_group_item['conversation_id']}")
         )
     return final_list_group_items
