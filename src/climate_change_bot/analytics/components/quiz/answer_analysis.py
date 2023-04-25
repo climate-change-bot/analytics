@@ -80,6 +80,7 @@ def get_answer_analysis(df):
         plot_bgcolor='rgba(255, 255, 255, 1)',
         paper_bgcolor='rgba(255, 255, 255, 1)',
         margin=dict(t=50, b=10),
+        yaxis=dict(title="Frequency", fixedrange=True)
     )
 
     fig.update_xaxes(showgrid=False, zeroline=False)
@@ -89,7 +90,7 @@ def get_answer_analysis(df):
     for ann in fig['layout']['annotations']:
         ann['font'] = dict(size=14, color='black')
 
-    graph = dcc.Graph(id='intent-ranking-chart', figure=fig)
+    graph = dcc.Graph(id='quiz-detailed-answer-chart', figure=fig)
 
     return html.Div(
         [
