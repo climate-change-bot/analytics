@@ -14,7 +14,7 @@ dash.register_page(__name__, path_template="/conversation/<conversation_id>")
 def layout(conversation_id=None):
     if conversation_id:
         content = get_content("conversation-content", [])
-        sidebar = get_sidebar(html.Div(id="conversation-sidebar", children=[]))
+        sidebar = get_sidebar(html.Div(id="conversation-sidebar", children=[]), show_testphase=False)
 
         return html.Div(children=[
             dcc.Location(id='conversation-url', refresh=False), sidebar, content

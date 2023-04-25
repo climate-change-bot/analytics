@@ -38,10 +38,10 @@ filter_testphase = html.Div(
 )
 
 
-def get_sidebar(nav_header=[]):
+def get_sidebar(nav_header=[], show_testphase=True):
     return html.Div(id="page-sidebar", children=[
         nav_header,
-        filter_testphase,
+        filter_testphase if show_testphase else [],
         dbc.Nav(
             [
                 dbc.NavLink("Home", href="/", active="exact"),
