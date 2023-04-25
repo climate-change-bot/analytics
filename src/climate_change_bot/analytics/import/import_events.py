@@ -6,6 +6,8 @@ from sentiment import add_sentiment
 from quiz import add_column_is_quiz
 from version import add_model_and_rasa_version
 from testphase import add_testphase
+from language import add_language
+from chatgpt import add_is_chat_gpt
 
 DATA_DIRECTORY = './../../../../data/'
 
@@ -92,6 +94,12 @@ def import_events():
         df['input_channel'] = df[['data']].apply(lambda x: add_data(x, 'input_channel'), axis=1)
         df['intent_ranking'] = df[['data']].apply(add_model_intent_ranking, axis=1)
 
+        # Add analysis data
+        df['is_checked'] = 0  # Answer has been checked by analyst
+        df['appropriate_in_context_conversation'] = 0  # Appropriate in the context of the conversation
+        df['is_climate_change_related'] = 1  # question/answer is climate change related
+        df['chatgpt_correctness_of_content'] = 0  # Chatgpt answer content correct
+
         df['number_of_chats'] = df.groupby('sender_id').sender_id.transform('size')
         df = df[df['number_of_chats'] > 2]
 
@@ -99,6 +107,8 @@ def import_events():
 
         df = df.sort_values(by='timestamp')
 
+        add_is_chat_gpt(df)
+        add_language(df)
         add_model_and_rasa_version(df)
         add_testphase(df)
         add_column_is_quiz(df)
