@@ -3,9 +3,21 @@ from dash import html, dcc
 import plotly.graph_objs as go
 import plotly.subplots as sp
 import re
+from climate_change_bot.analytics.components.quiz.quiz_text import questions, answers
 
 
-def get_question_statistic(df_quiz_answers):
+def _add_description(question_statistic):
+    question_statistic_text = {}
+    for question in question_statistic.keys():
+        question_text = questions[question]
+        question_statistic_text[question_text] = {}
+        for answer in question_statistic[question].keys():
+            answer_text = answers[answer]
+            question_statistic_text[question_text][answer_text] = question_statistic[question][answer]
+    return question_statistic_text
+
+
+def _get_question_statistic(df_quiz_answers):
     question_statistic = {}
     pattern = r'/quiz_answer\{"(?P<key>[^"]+)":"(?P<value>[^"]+)"\}'
     for row in df_quiz_answers.to_dict('records'):
@@ -23,18 +35,19 @@ def get_question_statistic(df_quiz_answers):
         else:
             print(f"Could not correctly parse answer {row['text']}")
 
-    sorted_question_statistc = {}
+    sorted_question_statistic = {}
 
     for key, value_dict in question_statistic.items():
         sorted_value_dict = dict(
             sorted(value_dict.items(), key=lambda x: (x[0].startswith('true'), x[1]), reverse=True))
-        sorted_question_statistc[key] = sorted_value_dict
-    return sorted_question_statistc
+        sorted_question_statistic[key] = sorted_value_dict
+    sorted_question_statistic = _add_description(sorted_question_statistic)
+    return sorted_question_statistic
 
 
 def get_answer_analysis(df):
     df_quiz_answers = df[df.intent_name == 'quiz_answer']
-    answer_counts = get_question_statistic(df_quiz_answers)
+    answer_counts = _get_question_statistic(df_quiz_answers)
 
     questions = list(answer_counts.keys())
 
@@ -81,7 +94,7 @@ def get_answer_analysis(df):
     return html.Div(
         [
             dbc.Card([
-                dbc.CardHeader([html.H5("Quiz Analysis", className="mb-1")]),
+                dbc.CardHeader([html.H5("Detailed Answer Analysis", className="mb-1")]),
                 dbc.CardBody([graph])]
             )
         ], style={"padding-bottom": "20px"})
