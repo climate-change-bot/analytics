@@ -95,7 +95,6 @@ def import_events():
         df['intent_ranking'] = df[['data']].apply(add_model_intent_ranking, axis=1)
 
         # Add analysis data
-        df['is_checked'] = 0  # Answer has been checked by analyst
         df['appropriate_in_context_conversation'] = 0  # Appropriate in the context of the conversation
         df['is_climate_change_related'] = 1  # question/answer is climate change related
         df['chatgpt_correctness_of_content'] = 0  # Chatgpt answer content correct
@@ -118,13 +117,13 @@ def import_events():
             df_previous = pd.read_excel(output_file_name, index_col=0)
 
             # Add index
-            max_previous_index = df_previous['index'].max()
+            max_previous_index = df_previous['index_message'].max()
             max_previous_index += 1
-            df['index'] = range(max_previous_index, max_previous_index + len(df))
+            df['index_message'] = range(max_previous_index, max_previous_index + len(df))
 
             df = pd.concat([df_previous, df])
         else:
-            df['index'] = range(1, len(df) + 1)
+            df['index_message'] = range(1, len(df) + 1)
 
         add_conversation_id(df)
 
