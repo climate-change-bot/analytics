@@ -116,7 +116,15 @@ def import_events():
 
         if os.path.exists(output_file_name):
             df_previous = pd.read_excel(output_file_name, index_col=0)
+
+            # Add index
+            max_previous_index = df_previous['index'].max()
+            max_previous_index += 1
+            df['index'] = range(max_previous_index, max_previous_index + len(df))
+
             df = pd.concat([df_previous, df])
+        else:
+            df['index'] = range(1, len(df) + 1)
 
         add_conversation_id(df)
 
