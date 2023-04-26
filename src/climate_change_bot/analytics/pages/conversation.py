@@ -1,23 +1,26 @@
 import dash
 import dash_bootstrap_components as dbc
-from dash import html, callback, dcc
-from dash.dependencies import Input, Output
+from dash import html, callback, dcc, callback_context
+from dash.dependencies import Input, Output, State, ALL
 import pandas as pd
 import re
+import os
 
 from climate_change_bot.analytics.pages.base import get_content, get_sidebar
 from climate_change_bot.analytics.components.conversation.messages import get_side_bar, get_conversation_messages
 
 dash.register_page(__name__, path_template="/conversation/<conversation_id>")
+file_name = os.environ.get('FILE_NAME', '../../../data/conversations_prod.xlsx')
 
 
 def layout(conversation_id=None):
     if conversation_id:
         content = get_content("conversation-content", [])
-        sidebar = get_sidebar(html.Div(id="conversation-sidebar", children=[]), show_testphase=False)
+        sidebar = get_sidebar(html.Div(id="conversation-sidebar", children=[
+        ]), show_testphase=False)
 
         return html.Div(children=[
-            dcc.Location(id='conversation-url', refresh=False), sidebar, content
+            dcc.Location(id='conversation-url', refresh=False), sidebar, content, html.Div(id='output')
         ])
 
 
@@ -48,3 +51,45 @@ def update_conversation_content(data, pathname):
                         style={"width": "auto", "margin": "12px 0px"}
                     )
                 ]), []
+
+
+def _extract_index(index):
+    pattern = r'"index":(\d+)'
+    match = re.search(pattern, index)
+    if match:
+        return int(match.group(1))
+
+
+@callback(
+    Output('global-data-not-filtered', 'data'),
+    Input({'type': 'language-select', 'index': ALL}, 'value'),
+    State('global-data-not-filtered', 'data'),
+    prevent_initial_call=True
+)
+def language_select_change(value, data):
+    triggered = callback_context.triggered
+    df = pd.DataFrame(data)
+    if len(triggered) == 1:
+        index = _extract_index(triggered[0]['prop_id'])
+        if index:
+            value = triggered[0]['value']
+            df.loc[df.index_message == index, 'language'] = value
+    return df.to_dict('records')
+
+
+@callback(
+    Output('output', 'children'),
+    Input('button-save-conversations', 'n_clicks'),
+    State('global-data-not-filtered', 'data'),
+    background=True,
+    running=[
+        (Output("button-save-conversations", "disabled"), True, False),
+    ],
+)
+def update_output(n_clicks, data):
+    if n_clicks:
+        df = pd.DataFrame(data)
+        with pd.ExcelWriter(file_name, engine="openpyxl", mode="w") as writer:
+            df.to_excel(writer, sheet_name='conversations')
+
+    return html.Div()

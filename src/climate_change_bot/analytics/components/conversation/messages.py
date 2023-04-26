@@ -1,5 +1,5 @@
 import dash_bootstrap_components as dbc
-from dash import html
+from dash import html, dcc
 from datetime import datetime
 import ast
 
@@ -11,6 +11,31 @@ def _get_time(timestamp):
 def _get_intents(intents):
     intents = ast.literal_eval(intents)
     return intents[1:]
+
+
+def _display_intents(x):
+    if x["type_name"] == "user":
+        return html.P(" | ".join([f"intent: {y['name']}, confidence: {y['confidence']:.3f}" for y in
+                                  _get_intents(x['intent_ranking']) if y['confidence'] > 0.05]),
+                      className="mb-1")
+
+
+def _display_user_commands(x):
+    ignored_intents = ['greet', 'start_quiz', 'quiz_answer']
+    if x["type_name"] == "user" and x["intent_name"] not in ignored_intents:
+        select_options = [{"label": "German", "value": 'de'},
+                          {"label": "English", "value": "en"},
+                          {"label": "French", "value": "fr"}]
+
+        return html.Div(
+            [html.Hr(),
+             dbc.Row([dbc.Col(dcc.Dropdown(
+                 options=select_options,
+                 value=x['language'],
+                 id={'type': 'language-select', 'index': x['index_message']},
+                 clearable=False
+             ))])
+             ])
 
 
 def get_side_bar(df_conversation_messages):
@@ -25,6 +50,8 @@ def get_side_bar(df_conversation_messages):
         html.P(
             f"Rasa Version: {df_conversation_messages.iloc[0]['rasa_version']}"
         ),
+        html.Hr(),
+        dbc.Button('Save Conversations', id='button-save-conversations', disabled=False),
         html.Hr()
     ]
 
@@ -51,10 +78,8 @@ def get_conversation_messages(df_conversation_messages):
                     ),
                     html.P(f"intent: {x[1]['intent']}, confidence: {x[1]['intent_confidence']:.3f}",
                            className="mb-1") if x[1]["type_name"] == "user" else None,
-                    html.P(" | ".join([f"intent: {y['name']}, confidence: {y['confidence']:.3f}" for y in
-                                       _get_intents(x[1]['intent_ranking']) if y['confidence'] > 0.05]),
-                           className="mb-1")
-                    if x[1]["type_name"] == "user" else None
+                    _display_intents(x[1]),
+                    _display_user_commands(x[1])
                 ], color="primary" if x[1]["type_name"] == "user" else "secondary") for x in
                     df_conversation_messages.iterrows()]
             )]
