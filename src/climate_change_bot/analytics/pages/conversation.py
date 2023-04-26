@@ -60,21 +60,55 @@ def _extract_index(index):
         return int(match.group(1))
 
 
-@callback(
-    Output('global-data-not-filtered', 'data'),
-    Input({'type': 'language-select', 'index': ALL}, 'value'),
-    State('global-data-not-filtered', 'data'),
-    prevent_initial_call=True
-)
-def language_select_change(value, data):
+def _set_value(data, column):
     triggered = callback_context.triggered
     df = pd.DataFrame(data)
     if len(triggered) == 1:
         index = _extract_index(triggered[0]['prop_id'])
         if index:
             value = triggered[0]['value']
-            df.loc[df.index_message == index, 'language'] = value
+            df.loc[df.index_message == index, column] = value
     return df.to_dict('records')
+
+
+@callback(
+    Output('global-data-not-filtered', 'data', allow_duplicate=True),
+    Input({'type': 'language-select', 'index': ALL}, 'value'),
+    State('global-data-not-filtered', 'data'),
+    prevent_initial_call=True
+)
+def language_select_change(value, data):
+    return _set_value(data, 'language')
+
+
+@callback(
+    Output('global-data-not-filtered', 'data', allow_duplicate=True),
+    Input({'type': 'climate-change-related-select', 'index': ALL}, 'value'),
+    State('global-data-not-filtered', 'data'),
+    prevent_initial_call=True
+)
+def language_select_change(value, data):
+    return _set_value(data, 'is_climate_change_related')
+
+
+@callback(
+    Output('global-data-not-filtered', 'data', allow_duplicate=True),
+    Input({'type': 'appropriate-in-context-conversation-select', 'index': ALL}, 'value'),
+    State('global-data-not-filtered', 'data'),
+    prevent_initial_call=True
+)
+def language_select_change(value, data):
+    return _set_value(data, 'appropriate_in_context_conversation')
+
+
+@callback(
+    Output('global-data-not-filtered', 'data', allow_duplicate=True),
+    Input({'type': 'chatgpt-correctness-of-content-select', 'index': ALL}, 'value'),
+    State('global-data-not-filtered', 'data'),
+    prevent_initial_call=True
+)
+def language_select_change(value, data):
+    return _set_value(data, 'chatgpt_correctness_of_content')
 
 
 @callback(
