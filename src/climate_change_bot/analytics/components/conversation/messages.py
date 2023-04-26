@@ -107,7 +107,13 @@ def get_conversation_messages(df_conversation_messages):
                 dbc.CardBody(
                     [
                         dbc.CardLink("Previous", href=f"{df_conversation_messages.iloc[0]['conversation_id'] - 1}"),
-                        dbc.CardLink("Next", href=f"{df_conversation_messages.iloc[0]['conversation_id'] + 1}")
+                        dbc.CardLink("Next", href=f"{df_conversation_messages.iloc[0]['conversation_id'] + 1}"),
+                        html.Hr(),
+                        dcc.ConfirmDialogProvider(
+                            children=dbc.Button('Delete Conversation', color="danger"),
+                            id='button-delete-conversation',
+                            message='Are you sure you want to delete the conversation?'
+                        ),
                     ]
                 ),
                 style={"width": "auto", "margin": "12px 0px"}

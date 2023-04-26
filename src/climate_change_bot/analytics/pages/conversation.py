@@ -116,14 +116,32 @@ def language_select_change(value, data):
     Input('button-save-conversations', 'n_clicks'),
     State('global-data-not-filtered', 'data'),
     background=True,
+    prevent_initial_call=True,
     running=[
         (Output("button-save-conversations", "disabled"), True, False),
     ],
 )
-def update_output(n_clicks, data):
+def save_conversations(n_clicks, data):
     if n_clicks:
         df = pd.DataFrame(data)
         with pd.ExcelWriter(file_name, engine="openpyxl", mode="w") as writer:
             df.to_excel(writer, sheet_name='conversations')
 
     return html.Div()
+
+
+@callback(
+    Output('global-data-not-filtered', 'data', allow_duplicate=True),
+    Input('button-delete-conversation', 'submit_n_clicks'),
+    State('global-data-not-filtered', 'data'),
+    State('conversation-url', 'pathname'),
+    background=True,
+    prevent_initial_call=True
+)
+def delete_conversation(submit_n_clicks, data, pathname):
+    df = pd.DataFrame(data)
+    if submit_n_clicks:
+        conversation_id = re.search(r'/conversation/(\w+)', pathname).group(1)
+        if conversation_id and int(conversation_id) >= 0:
+            df = df[df['conversation_id'] != int(conversation_id)]
+    return df.to_dict('records')
