@@ -7,15 +7,32 @@ select_language_options = [{"label": "German", "value": 'de'},
                            {"label": "English", "value": "en"},
                            {"label": "French", "value": "fr"}]
 
-select_is_climate_change_related_options = [{"label": "Climate Change Related", "value": 1},
-                                            {"label": "Not Climate Change Related", "value": 0}]
+select_is_climate_change_related_options = [{
+    "label": html.Span(['Climate Change Related'], style={'color': 'green'}),
+    "value": 1,
+}, {
+    "label": html.Span(['Not Climate Change Related'], style={'color': 'red'}),
+    "value": 0,
+}]
 
-select_appropriate_options = [{"label": "Correct in Context", "value": 1},
-                              {"label": "Wrong in Context", "value": 0}]
+select_appropriate_options = [{
+    "label": html.Span(['Correct in Context'], style={'color': 'green'}),
+    "value": 1,
+}, {
+    "label": html.Span(['Wrong in Context'], style={'color': 'red'}),
+    "value": 0,
+}]
 
-select_chatgpt_correctness_of_content_options = [{"label": "Correct Content", "value": 2},
-                                                 {"label": "Partly Correct Content", "value": 1},
-                                                 {"label": "Wrong Content", "value": 0}]
+select_chatgpt_correctness_of_content_options = [{
+    "label": html.Span(['Correct Content'], style={'color': 'green'}),
+    "value": 2,
+}, {
+    "label": html.Span(['Partly Correct Content'], style={'color': '#DAA520'}),
+    "value": 1,
+}, {
+    "label": html.Span(['Wrong Content'], style={'color': 'red'}),
+    "value": 0,
+}]
 
 
 def _get_time(timestamp):
