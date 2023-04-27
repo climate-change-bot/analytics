@@ -2,6 +2,7 @@ import dash_bootstrap_components as dbc
 from dash import html, dcc
 from datetime import datetime
 import ast
+import math
 
 select_language_options = [{"label": "German", "value": 'de'},
                            {"label": "English", "value": "en"},
@@ -49,6 +50,17 @@ def _display_intents(x):
         return html.P(" | ".join([f"intent: {y['name']}, confidence: {y['confidence']:.3f}" for y in
                                   _get_intents(x['intent_ranking']) if y['confidence'] > 0.05]),
                       className="mb-1")
+
+
+def _display_sentiment(x):
+    if x["type_name"] == "user" and not math.isnan(x['neutral']) and not math.isnan(x['positive']) and not math.isnan(
+            x['negative']):
+        return html.Div(
+            [html.Hr(),
+             html.Span(f"{x['neutral']:.2f} Neutral, ", style={'color': 'gray'}),
+             html.Span(f"{x['positive']:.2f} Positive, ", style={'color': 'green'}),
+             html.Span(f"{x['negative']:.2f} Negative", style={'color': 'red'})]
+        )
 
 
 def _display_user_commands(x):
@@ -124,6 +136,8 @@ delete_button = dbc.Button('Delete Conversation', color="danger")
 
 
 def get_conversation_messages(df_conversation_messages):
+    df_sentiment = df_conversation_messages.agg({'neutral': 'mean', 'negative': 'mean', 'positive': 'mean'})
+
     return html.Div(
         [
             dbc.Card(
@@ -131,6 +145,10 @@ def get_conversation_messages(df_conversation_messages):
                     [
                         dbc.CardLink("Previous", href=f"{df_conversation_messages.iloc[0]['conversation_id'] - 1}"),
                         dbc.CardLink("Next", href=f"{df_conversation_messages.iloc[0]['conversation_id'] + 1}"),
+                        html.Hr(),
+                        html.Div(f"{df_sentiment['neutral']:.2f} Neutral", style={'color': 'gray'}),
+                        html.Div(f"{df_sentiment['positive']:.2f} Positive", style={'color': 'green'}),
+                        html.Div(f"{df_sentiment['negative']:.2f} Negative", style={'color': 'red'}),
                         html.Hr(),
                         dcc.ConfirmDialogProvider(
                             children=delete_button,
@@ -152,6 +170,7 @@ def get_conversation_messages(df_conversation_messages):
                     html.P(f"intent: {x[1]['intent']}, confidence: {x[1]['intent_confidence']:.3f}",
                            className="mb-1") if x[1]["type_name"] == "user" else None,
                     _display_intents(x[1]),
+                    _display_sentiment(x[1]),
                     _display_user_commands(x[1]),
                     _display_bot_commands(x[1])
                 ], color="primary" if x[1]["type_name"] == "user" else "secondary") for x in
