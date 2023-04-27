@@ -99,6 +99,9 @@ def _display_bot_commands(x):
              ])
 
 
+save_conversation_button = dbc.Button('Save Conversations', id='button-save-conversations', disabled=False)
+
+
 def get_side_bar(df_conversation_messages):
     return [
         html.P(html.B(f"{df_conversation_messages.iloc[0]['sender_id']}")),
@@ -112,9 +115,12 @@ def get_side_bar(df_conversation_messages):
             f"Rasa Version: {df_conversation_messages.iloc[0]['rasa_version']}"
         ),
         html.Hr(),
-        dbc.Button('Save Conversations', id='button-save-conversations', disabled=False),
+        save_conversation_button,
         html.Hr()
     ]
+
+
+delete_button = dbc.Button('Delete Conversation', color="danger")
 
 
 def get_conversation_messages(df_conversation_messages):
@@ -127,7 +133,7 @@ def get_conversation_messages(df_conversation_messages):
                         dbc.CardLink("Next", href=f"{df_conversation_messages.iloc[0]['conversation_id'] + 1}"),
                         html.Hr(),
                         dcc.ConfirmDialogProvider(
-                            children=dbc.Button('Delete Conversation', color="danger"),
+                            children=delete_button,
                             id='button-delete-conversation',
                             message='Are you sure you want to delete the conversation?'
                         ),

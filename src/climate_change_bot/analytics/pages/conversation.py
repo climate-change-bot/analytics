@@ -12,25 +12,26 @@ from climate_change_bot.analytics.components.conversation.messages import get_si
 dash.register_page(__name__, path_template="/conversation/<conversation_id>")
 file_name = os.environ.get('FILE_NAME', '../../../data/conversations_prod.xlsx')
 
+content = get_content("conversation-content", [])
+sidebar = get_sidebar(html.Div(id="conversation-sidebar", children=[
+]), show_testphase=False)
+
 
 def layout(conversation_id=None):
     if conversation_id:
-        content = get_content("conversation-content", [])
-        sidebar = get_sidebar(html.Div(id="conversation-sidebar", children=[
-        ]), show_testphase=False)
-
         return html.Div(children=[
-            dcc.Location(id='conversation-url', refresh=False), sidebar, content, html.Div(id='output')
+            dcc.Location(id='conversation-url', refresh=False), sidebar, content,
+            html.Div(id='output', style={'display': 'none'})
         ])
 
 
 @callback(
     Output('conversation-content', 'children'),
     Output('conversation-sidebar', 'children'),
-    Input('global-data-not-filtered', 'data'),
-    Input('conversation-url', 'pathname')
+    Input('conversation-url', 'pathname'),
+    State('global-data-not-filtered', 'data'),
 )
-def update_conversation_content(data, pathname):
+def update_conversation_content(pathname, data):
     df = pd.DataFrame(data)
     if isinstance(pathname, str):
         conversation_id = re.search(r'/conversation/(\w+)', pathname).group(1)
