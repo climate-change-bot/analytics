@@ -127,6 +127,7 @@ def save_conversations(n_clicks, data):
         df = pd.DataFrame(data)
         with pd.ExcelWriter(file_name, engine="openpyxl", mode="w") as writer:
             df.to_excel(writer, sheet_name='conversations')
+            print("conversation saved")
 
     return html.Div()
 
@@ -145,4 +146,5 @@ def delete_conversation(submit_n_clicks, data, pathname):
         conversation_id = re.search(r'/conversation/(\w+)', pathname).group(1)
         if conversation_id and int(conversation_id) >= 0:
             df = df[df['conversation_id'] != int(conversation_id)]
+            print("conversation deleted")
     return df.to_dict('records')
