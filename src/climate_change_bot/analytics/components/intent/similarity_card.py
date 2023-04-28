@@ -28,4 +28,4 @@ def get_similarity_card(similarities):
                     ], style={
                         "maxHeight": "800px",
                         "overflowY": "auto"
-                    })])])
+                    })])], style={"padding-bottom": "20px"})
