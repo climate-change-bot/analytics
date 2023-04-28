@@ -4,7 +4,7 @@ import plotly.graph_objects as go
 
 
 def get_total_graph(df):
-    df_sentiment = df[df.neutral.notnull() & df.negative.notnull() & df.positive.notnull()]
+    df_sentiment = df[df.neutral.notnull() & df.negative.notnull() & df.positive.notnull() & (df.language == 'de')]
     df_sentiment = df_sentiment.agg({'neutral': 'mean', 'negative': 'mean', 'positive': 'mean'})
 
     fig = go.Figure()
