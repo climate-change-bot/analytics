@@ -9,6 +9,7 @@ from climate_change_bot.analytics.components.intent.intents import get_intents, 
 from climate_change_bot.analytics.components.intent.similarity import get_similarities
 from climate_change_bot.analytics.components.intent.similarity_card import get_similarity_card
 from climate_change_bot.analytics.components.intent.cluster_card import get_cluster_card
+from climate_change_bot.analytics.components.intent.intent_vs_chatgpt import get_intent_vs_chatgpt
 
 dash.register_page(__name__, path='/intents')
 
@@ -35,6 +36,6 @@ def update_intents(data):
     all_chatgpt_intents = get_chatgpt_intents(df, all_intents)
     similarities = get_similarities(all_intents, all_chatgpt_intents)
 
-    layout_content = [get_ranking(df_intent_ranking), get_similarity_card(similarities),
+    layout_content = [get_ranking(df_intent_ranking), get_intent_vs_chatgpt(df), get_similarity_card(similarities),
                       get_cluster_card(df, all_intents)]
     return layout_content
