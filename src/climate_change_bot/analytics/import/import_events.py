@@ -130,7 +130,7 @@ def import_events():
         if not os.path.exists(DATA_DIRECTORY):
             os.mkdir(DATA_DIRECTORY)
         with pd.ExcelWriter(output_file_name, engine="openpyxl", mode="w") as writer:
-            df.to_excel(writer, sheet_name='conversations')
+            df.to_excel(writer, sheet_name='conversations', index=False)
 
 
 if __name__ == "__main__":

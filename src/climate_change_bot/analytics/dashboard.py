@@ -1,25 +1,16 @@
 from dash import dash, html, dcc, DiskcacheManager
 import diskcache
 import dash_bootstrap_components as dbc
-import os
-import pandas as pd
 
 from uuid import uuid4
 
 # Caching of views.
 launch_uid = uuid4()
 cache = diskcache.Cache("./cache")
+
 background_callback_manager = DiskcacheManager(
     cache, cache_by=[lambda: launch_uid], expire=60
 )
-
-_file_name = os.environ.get('FILE_NAME', '../../../data/conversations_prod.xlsx')
-
-df = pd.read_excel(_file_name)
-
-df['timestamp_datetime'] = pd.to_datetime(df['timestamp'], unit='s')
-df['date'] = df['timestamp_datetime'].dt.date
-
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP], use_pages=True,
                 background_callback_manager=background_callback_manager)
 app.config.suppress_callback_exceptions = True
@@ -34,11 +25,11 @@ navbar = dbc.NavbarSimple(
 )
 
 app.layout = html.Div(children=[
-    dcc.Store(id='global-data', data=df.to_dict('records')),
-    dcc.Store(id='global-data-not-filtered', data=df.to_dict('records')),
+    dcc.Store(id='signal-global-data'),
+    dcc.Store(id='signal-global-data-not-filtered'),
     navbar,
     dash.page_container
 ])
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=True, threaded=False)

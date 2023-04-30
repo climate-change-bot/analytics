@@ -114,8 +114,8 @@ def _display_bot_commands(x):
 save_conversation_button = dbc.Button('Save Conversations', id='button-save-conversations', disabled=False)
 
 
-def get_side_bar(df_conversation_messages):
-    return [
+def get_sidebar_conversation(df_conversation_messages):
+    return html.Div([
         html.P(html.B(f"{df_conversation_messages.iloc[0]['sender_id']}")),
         html.P(
             f"Start: {_get_time(df_conversation_messages.iloc[0]['timestamp'])}"
@@ -129,7 +129,7 @@ def get_side_bar(df_conversation_messages):
         html.Hr(),
         save_conversation_button,
         html.Hr()
-    ]
+    ])
 
 
 delete_button = dbc.Button('Delete Conversation', color="danger")

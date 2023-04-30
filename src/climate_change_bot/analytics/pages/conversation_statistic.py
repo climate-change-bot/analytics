@@ -1,4 +1,3 @@
-import pandas as pd
 import dash
 from dash import html, callback
 from dash.dependencies import Input, Output
@@ -6,6 +5,7 @@ from dash.dependencies import Input, Output
 from climate_change_bot.analytics.components.conversation.statistic.turns import get_turns_whiskers
 from climate_change_bot.analytics.components.conversation.statistic.duration import get_duration_whiskers
 from climate_change_bot.analytics.pages.base import get_content, get_sidebar
+from climate_change_bot.analytics.store import global_store
 
 dash.register_page(__name__, path='/conversation-statistic')
 
@@ -19,10 +19,10 @@ layout = html.Div(children=[
 
 @callback(
     Output('conversation-statistic-content', 'children'),
-    [Input('global-data', 'data')]
+    [Input('signal-global-data', 'data')]
 )
-def update_conversations(data):
-    df = pd.DataFrame(data)
+def update_conversation_statistic(data):
+    df = global_store.get_data(data)
 
     layout_content = [
         get_turns_whiskers(df), get_duration_whiskers(df)

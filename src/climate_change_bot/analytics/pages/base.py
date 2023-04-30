@@ -63,14 +63,8 @@ def get_content(id_name, children):
 
 
 @callback(
-    Output('global-data', 'data'),
-    Input('filter-testphase', 'value'),
-    State('global-data-not-filtered', 'data'),
+    Output('signal-global-data', 'data'),
+    Input('filter-testphase', 'value')
 )
-def update_global_data(filter_value, data):
-    df = pd.DataFrame(data)
-    if filter_value == 0:
-        return df.to_dict('records')
-    else:
-        df_filtered = df[df.testphase == filter_value]
-        return df_filtered.to_dict('records')
+def update_global_data(value):
+    return value

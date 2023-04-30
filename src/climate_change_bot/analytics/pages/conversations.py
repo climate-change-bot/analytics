@@ -1,10 +1,10 @@
-import pandas as pd
 import dash
 from dash import html, callback
 from dash.dependencies import Input, Output
 
 from climate_change_bot.analytics.components.conversation.overview import get_conversations
 from climate_change_bot.analytics.pages.base import get_content, get_sidebar
+from climate_change_bot.analytics.store import global_store
 
 dash.register_page(__name__, path='/conversations')
 
@@ -18,10 +18,10 @@ layout = html.Div(children=[
 
 @callback(
     Output('conversations-content', 'children'),
-    [Input('global-data', 'data')]
+    Input('signal-global-data', 'data')
 )
-def update_conversations(data):
-    df = pd.DataFrame(data)
+def update_conversations(value):
+    df = global_store.get_data(value)
     df_conversation_overview = df.groupby('sender_id')
     df_conversation_overview = df_conversation_overview.agg(
         {'sender_id': 'size', 'neutral': 'mean', 'negative': 'mean', 'positive': 'mean', 'is_quiz': 'max',
