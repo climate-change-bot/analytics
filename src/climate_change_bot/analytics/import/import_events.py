@@ -104,7 +104,7 @@ def import_events():
 
         df = df.drop('data', axis=1)
 
-        df = df.sort_values(by='timestamp')
+        df = df.sort_values(by=['timestamp', 'sender_id'])
 
         add_is_chat_gpt(df)
         add_language(df)
