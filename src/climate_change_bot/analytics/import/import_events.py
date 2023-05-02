@@ -44,9 +44,9 @@ def add_model_intent_ranking(cell):
         return data['parse_data']['intent_ranking']
 
 
-def add_conversation_id(df):
+def add_conversation_id(df, max_conversation_id):
     print("Add conversations ids")
-    conversation_id = 0
+    conversation_id = max_conversation_id
     conversation_ids = []
     sender_conversation_id = {}
     for row in df.to_dict('records'):
@@ -113,19 +113,24 @@ def import_events():
         add_column_is_quiz(df)
         add_sentiment(df)
 
+        df['timestamp_datetime'] = pd.to_datetime(df['timestamp'], unit='s')
+        df['date'] = df['timestamp_datetime'].dt.date
+
         if os.path.exists(output_file_name):
-            df_previous = pd.read_excel(output_file_name, index_col=0)
+            df_previous = pd.read_excel(output_file_name)
 
             # Add index
             max_previous_index = df_previous['index_message'].max()
             max_previous_index += 1
             df['index_message'] = range(max_previous_index, max_previous_index + len(df))
 
+            max_conversation_id = df_previous['conversation_id'].max()
+            add_conversation_id(df, max_conversation_id)
+
             df = pd.concat([df_previous, df])
         else:
             df['index_message'] = range(1, len(df) + 1)
-
-        add_conversation_id(df)
+            add_conversation_id(df, 0)
 
         if not os.path.exists(DATA_DIRECTORY):
             os.mkdir(DATA_DIRECTORY)
