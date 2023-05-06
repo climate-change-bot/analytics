@@ -98,6 +98,7 @@ def import_events():
         df['appropriate_in_context_conversation'] = 1  # Appropriate in the context of the conversation
         df['is_climate_change_related'] = 1  # question/answer is climate change related
         df['chatgpt_correctness_of_content'] = 2  # Chatgpt answer content correct
+        df['depth_chatgpt_answer'] = 0  # Depth of the chatgpt answer
 
         df['number_of_chats'] = df.groupby('sender_id').sender_id.transform('size')
         df = df[df['number_of_chats'] > 2]

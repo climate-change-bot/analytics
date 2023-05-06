@@ -102,6 +102,15 @@ def language_select_change(value):
 
 
 @callback(
+    Output('output', 'children', allow_duplicate=True),
+    Input({'type': 'chatgpt-depth-select', 'index': ALL}, 'value'),
+    prevent_initial_call=True
+)
+def language_select_change(value):
+    return _set_value('depth_chatgpt_answer')
+
+
+@callback(
     Output('output', 'children'),
     Input('button-save-conversations', 'n_clicks'),
     prevent_initial_call=True,

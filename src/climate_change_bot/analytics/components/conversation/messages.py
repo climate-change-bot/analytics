@@ -35,6 +35,17 @@ select_chatgpt_correctness_of_content_options = [{
     "value": 0,
 }]
 
+select_chatgpt_depth_options = [{
+    "label": html.Span(['Detailed'], style={'color': 'green'}),
+    "value": 2,
+}, {
+    "label": html.Span(['Medium depth'], style={'color': '#DAA520'}),
+    "value": 1,
+}, {
+    "label": html.Span(['Superficial'], style={'color': 'red'}),
+    "value": 0,
+}]
+
 
 def _get_time(timestamp):
     return datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
@@ -106,6 +117,11 @@ def _display_bot_commands(x):
                  options=select_chatgpt_correctness_of_content_options,
                  value=x['chatgpt_correctness_of_content'],
                  id={'type': 'chatgpt-correctness-of-content-select', 'index': x['index_message']},
+                 clearable=False
+             )) if x['is_chatgpt_answer'] == 1 else None, dbc.Col(dcc.Dropdown(
+                 options=select_chatgpt_depth_options,
+                 value=x['depth_chatgpt_answer'],
+                 id={'type': 'chatgpt-depth-select', 'index': x['index_message']},
                  clearable=False
              )) if x['is_chatgpt_answer'] == 1 else None])
              ])
