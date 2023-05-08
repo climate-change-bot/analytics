@@ -28,14 +28,11 @@ layout = html.Div(children=[
 )
 def update_intents(data):
     df = global_store.get_data(data)
-    df_intents = df[(df.intent_name != 'nlu_fallback') & (df.intent_name != 'greet') & (df.type_name == 'user')]
-    df_intent_ranking = df_intents.groupby(['intent_name']).size(). \
-        reset_index(name='counts').sort_values(by='counts', ascending=False)
 
     all_intents = get_intents()
     all_chatgpt_intents = get_chatgpt_intents(df, all_intents)
     similarities = get_similarities(all_intents, all_chatgpt_intents)
 
-    layout_content = [get_ranking(df_intent_ranking), get_intent_vs_chatgpt(df), get_similarity_card(similarities),
+    layout_content = [get_ranking(df), get_intent_vs_chatgpt(df), get_similarity_card(similarities),
                       get_cluster_card(df, all_intents)]
     return layout_content
