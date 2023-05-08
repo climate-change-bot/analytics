@@ -13,6 +13,7 @@ class GlobalStore:
             return self.df
         else:
             df_filtered = self.df[self.df.testphase == filter_value]
+            df_filtered.reset_index(inplace=True)
             return df_filtered
 
     def set_data(self, new_df):
