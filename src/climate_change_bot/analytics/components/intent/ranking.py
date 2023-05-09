@@ -8,7 +8,7 @@ def get_ranking(df):
 
     intents_index = df[
         (df.intent_name != 'nlu_fallback') & (df.intent_name != 'greet') & (df.type_name == 'user') & (
-                df.intent_name != 'quiz_answer') & (df.intent_name != 'start_quiz')].index
+                df.intent_name != 'quiz_answer')].index
     next_row_indices = [index + 1 for index in intents_index]
 
     df_user_intents = df.iloc[intents_index]
