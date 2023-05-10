@@ -13,3 +13,6 @@ germansentiment~=1.1.0
 tqdm~=4.65.0
 diskcache~=5.6.1
 fasttext-langdetect~=1.0.5
+nltk~=3.8.1
+scikit-learn~=1.2.2
+wordcloud~=1.9.1.1
