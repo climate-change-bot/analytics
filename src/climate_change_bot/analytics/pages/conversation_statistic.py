@@ -23,8 +23,11 @@ layout = html.Div(children=[
 )
 def update_conversation_statistic(data):
     df = global_store.get_data(data)
+    df_1 = global_store.get_data(1)
+    df_2 = global_store.get_data(2)
+    df_3 = global_store.get_data(3)
 
     layout_content = [
-        get_turns_whiskers(df), get_duration_whiskers(df)
+        get_turns_whiskers(df_1, df_2, df_3), get_duration_whiskers(df)
     ]
     return layout_content
