@@ -49,6 +49,7 @@ def get_sidebar(nav_header=[], show_testphase=True):
                 dbc.NavLink("Conversation Statistic", href="/conversation-statistic", active="exact"),
                 dbc.NavLink("Quiz", href="/quiz", active="exact"),
                 dbc.NavLink("Intents", href="/intents", active="exact"),
+                dbc.NavLink("ChatGPT", href="/chatgpt", active="exact"),
                 dbc.NavLink("Sentiment", href="/sentiment", active="exact"),
                 dbc.NavLink("Topic", href="/topic", active="exact")
             ],
