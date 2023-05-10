@@ -3,10 +3,8 @@ from dash import html, dcc
 import plotly.graph_objects as go
 import pandas as pd
 
-from climate_change_bot.analytics.components.conversation.turn import get_turns
 
-
-def get_duration_whiskers(df):
+def _get_durations(df):
     time_min_max = df.groupby('conversation_id')['timestamp_datetime'].agg(['min', 'max'])
     time_min_max['max'] = pd.to_datetime(time_min_max['max'])
     time_min_max['min'] = pd.to_datetime(time_min_max['min'])
@@ -14,13 +12,22 @@ def get_duration_whiskers(df):
     time_min_max['duration_seconds'] = time_min_max['duration'].dt.total_seconds()
     # Longer conversations are like because they walked away from the computer
     time_min_max = time_min_max[time_min_max.duration_seconds < 3600]
+    return time_min_max
+
+
+def get_duration_whiskers(df_1, df_2, df_3):
+    duration_1 = _get_durations(df_1)
+    duration_2 = _get_durations(df_2)
+    duration_3 = _get_durations(df_3)
 
     fig = go.Figure()
-    fig.add_trace(go.Box(y=time_min_max['duration_seconds'], name='Durations', boxmean=True))
+    fig.add_trace(go.Box(y=duration_1['duration_seconds'], name='Testphase 1', boxmean=True))
+    fig.add_trace(go.Box(y=duration_2['duration_seconds'], name='Testphase 2', boxmean=True))
+    fig.add_trace(go.Box(y=duration_3['duration_seconds'], name='Testphase 3', boxmean=True))
     fig.update_xaxes(title=None)
     fig.update_layout(
         dragmode=None,
-        yaxis=dict(title="Duration", fixedrange=True),
+        yaxis=dict(title="Duration (s)", fixedrange=True),
         plot_bgcolor='white',
         font=dict(family='Arial', size=12, color='black')
     )
