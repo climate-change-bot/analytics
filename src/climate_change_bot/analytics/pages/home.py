@@ -18,6 +18,16 @@ layout = html.Div(children=[
 ])
 
 
+def _get_number_of_quiz(df):
+    df_quiz_answers = df[df.intent_name == 'quiz_answer']
+    count = 0
+    for conversation_id, group in df_quiz_answers.groupby('sender_id'):
+        group_size = len(group)
+        if group_size >= 8:
+            count += int(group_size / 8)
+    return count
+
+
 @callback(
     Output('home-content', 'children'),
     Input('signal-global-data', 'data'),
@@ -25,7 +35,7 @@ layout = html.Div(children=[
 )
 def update_home(value):
     df = global_store.get_data(value)
-    number_of_quiz = len(df[df.intent_name == 'start_quiz'])
+    number_of_quiz = _get_number_of_quiz(df)
 
     number_of_conversations = len(df['sender_id'].value_counts())
     number_of_answers = len(df[df.type_name == 'bot'])
