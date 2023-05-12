@@ -2,11 +2,11 @@ import dash_bootstrap_components as dbc
 from dash import html, dcc
 import plotly.subplots as sp
 import plotly.graph_objects as go
-from pygam import LinearGAM
 
 
 def get_conversation_length_sentiment(df):
-    df_conversation_overview = df.groupby('sender_id')
+    df_conversation_overview = df[df.is_quiz == 0]
+    df_conversation_overview = df_conversation_overview.groupby('sender_id')
     df_conversation_overview = df_conversation_overview.agg(
         {'sender_id': 'size', 'neutral': 'mean', 'negative': 'mean', 'positive': 'mean',
          'conversation_id': 'max'})
