@@ -50,7 +50,7 @@ def get_intent_examples(df, all_intents):
     return html.Div(
         [
             dbc.Card([
-                dbc.CardHeader([html.H5("Intent Vs ChatGpt", className="mb-1")]),
+                dbc.CardHeader([html.H5("Intent Counts", className="mb-1")]),
                 dbc.CardBody(
                     [dbc.Row([dbc.Col(card), dbc.Col(card_2), dbc.Col(card_3)], style={'padding-bottom': 20})])]
             )
