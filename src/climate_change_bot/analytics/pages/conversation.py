@@ -111,6 +111,35 @@ def language_select_change(value):
 
 
 @callback(
+    Output('output', 'children', allow_duplicate=True),
+    Input({'type': 'sentiment-select', 'index': ALL}, 'value'),
+    prevent_initial_call=True
+)
+def sentiment_change(value):
+    triggered = callback_context.triggered
+    if len(triggered) == 1:
+        df = global_store.get_data(0)
+        index = _extract_index(triggered[0]['prop_id'])
+        if index:
+            value = triggered[0]['value']
+            if value == 2:
+                df.loc[df.index_message == index, 'positive'] = 1.0
+                df.loc[df.index_message == index, 'negative'] = 0.0
+                df.loc[df.index_message == index, 'neutral'] = 0.0
+            elif value == 1:
+                df.loc[df.index_message == index, 'positive'] = 0.0
+                df.loc[df.index_message == index, 'negative'] = 0.0
+                df.loc[df.index_message == index, 'neutral'] = 1.0
+            elif value == 0:
+                df.loc[df.index_message == index, 'positive'] = 0.0
+                df.loc[df.index_message == index, 'negative'] = 1.0
+                df.loc[df.index_message == index, 'neutral'] = 0.0
+            else:
+                print('could not update sentiment')
+    return html.Div()
+
+
+@callback(
     Output('output', 'children'),
     Input('button-save-conversations', 'n_clicks'),
     prevent_initial_call=True,

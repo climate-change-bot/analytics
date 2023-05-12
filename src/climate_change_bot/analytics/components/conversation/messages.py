@@ -46,6 +46,17 @@ select_chatgpt_depth_options = [{
     "value": 0,
 }]
 
+select_sentiment_options = [{
+    "label": html.Span(['Positive'], style={'color': 'green'}),
+    "value": 2,
+}, {
+    "label": html.Span(['Neutral'], style={'color': 'gray'}),
+    "value": 1,
+}, {
+    "label": html.Span(['Negative'], style={'color': 'red'}),
+    "value": 0,
+}]
+
 
 def _get_time(timestamp):
     return datetime.fromtimestamp(timestamp).strftime('%Y-%m-%d %H:%M:%S')
@@ -63,15 +74,30 @@ def _display_intents(x):
                       className="mb-1")
 
 
+def _get_sentiment_option(neutral, positive, negative):
+    if positive > neutral and positive > negative:
+        return 2
+    elif neutral > positive and neutral > negative:
+        return 1
+    elif negative > positive and negative > neutral:
+        return 0
+
+
 def _display_sentiment(x):
     if x["type_name"] == "user" and not math.isnan(x['neutral']) and not math.isnan(x['positive']) and not math.isnan(
             x['negative']):
         return html.Div(
             [html.Hr(),
-             html.Span(f"{x['neutral']:.2f} Neutral, ", style={'color': 'gray'}),
-             html.Span(f"{x['positive']:.2f} Positive, ", style={'color': 'green'}),
-             html.Span(f"{x['negative']:.2f} Negative", style={'color': 'red'})]
-        )
+             dbc.Row([dbc.Col([html.Span(f"{x['neutral']:.2f} Neutral, ", style={'color': 'gray'}),
+                               html.Span(f"{x['positive']:.2f} Positive, ", style={'color': 'green'}),
+                               html.Span(f"{x['negative']:.2f} Negative", style={'color': 'red'})]),
+                      dbc.Col(dcc.Dropdown(
+                          options=select_sentiment_options,
+                          value=_get_sentiment_option(x['neutral'], x['positive'], x['negative']),
+                          id={'type': 'sentiment-select', 'index': x['index_message']},
+                          clearable=False
+                      ))])
+             ])
 
 
 def _display_user_commands(x):
