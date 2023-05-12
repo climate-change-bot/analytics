@@ -19,6 +19,7 @@ def _add_description(question_statistic):
 
 def _get_question_statistic(df_quiz_answers):
     question_statistic = {}
+    added_to_question = []
     pattern = r'/quiz_answer\{"(?P<key>[^"]+)":"(?P<value>[^"]+)"\}'
     for row in df_quiz_answers.to_dict('records'):
         match = re.search(pattern, row['text'])
@@ -27,11 +28,12 @@ def _get_question_statistic(df_quiz_answers):
             value = match.group('value')
             if key not in question_statistic:
                 question_statistic[key] = {}
-
-            if value not in question_statistic[key]:
-                question_statistic[key][value] = 1
-            else:
-                question_statistic[key][value] += 1
+            if f"{key}{row['conversation_id']}" not in added_to_question:
+                if value not in question_statistic[key]:
+                    question_statistic[key][value] = 1
+                else:
+                    question_statistic[key][value] += 1
+                added_to_question.append(f"{key}{row['conversation_id']}")
         else:
             print(f"Could not correctly parse answer {row['text']}")
 
@@ -95,7 +97,7 @@ def get_answer_analysis(df):
     return html.Div(
         [
             dbc.Card([
-                dbc.CardHeader([html.H5("Detailed Answer Analysis", className="mb-1")]),
+                dbc.CardHeader([html.H5("Detailed Answer Analysis (First Attempt)", className="mb-1")]),
                 dbc.CardBody([graph])]
             )
         ], style={"padding-bottom": "20px"})
