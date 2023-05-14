@@ -1,15 +1,11 @@
 import dash_bootstrap_components as dbc
 from dash import html, dcc
 import plotly.express as px
+from climate_change_bot.analytics.components.chatgpt.chatgpt import get_chatgpt_answers
 
 
 def get_sunburst_graph(df):
-    chatgpt_index = df[
-        (df.type_name == 'user') & (df.timestamp > 1677063600) & (df.intent_name == 'nlu_fallback')].index
-    next_row_indices = [index + 1 for index in chatgpt_index]
-    df_chatgpt_answer = df.iloc[next_row_indices]
-    df_chatgpt_answer = df_chatgpt_answer[df_chatgpt_answer.is_climate_change_related == 1]
-    df_chatgpt_answer.reset_index(drop=True, inplace=True)
+    df_chatgpt_answer = get_chatgpt_answers(df)
 
     df_chatgpt_answer['chatgpt_correctness_of_content'] = df_chatgpt_answer['chatgpt_correctness_of_content'].map(
         {0: 'Wrong', 1: 'Partly Correct', 2: 'Correct'})
