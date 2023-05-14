@@ -14,17 +14,21 @@ def get_conversation_length_sentiment(df):
                                                         df_conversation_overview.negative.notnull() &
                                                         df_conversation_overview.positive.notnull()]
 
+    df_positive = df_conversation_overview[df_conversation_overview.positive > 0.05]
+    df_negative = df_conversation_overview[df_conversation_overview.negative > 0.05]
+    df_neutral = df_conversation_overview[df_conversation_overview.neutral > 0.05]
+
     fig = sp.make_subplots(rows=3, cols=1,
                            row_heights=[400, 400, 400],
-                           vertical_spacing=0.15)
+                           vertical_spacing=0.1)
     fig.add_trace(
-        go.Scatter(x=df_conversation_overview['sender_id'], y=df_conversation_overview['positive'], mode='markers',
+        go.Scatter(x=df_conversation_overview['sender_id'], y=df_positive['positive'], mode='markers',
                    name='Positive Sentiment', marker_color='green', marker_size=5), row=1, col=1)
     fig.add_trace(
-        go.Scatter(x=df_conversation_overview['sender_id'], y=df_conversation_overview['negative'], mode='markers',
+        go.Scatter(x=df_conversation_overview['sender_id'], y=df_negative['negative'], mode='markers',
                    name='Negative Sentiment', marker_color='red', marker_size=5), row=2, col=1)
     fig.add_trace(
-        go.Scatter(x=df_conversation_overview['sender_id'], y=df_conversation_overview['neutral'], mode='markers',
+        go.Scatter(x=df_conversation_overview['sender_id'], y=df_neutral['neutral'], mode='markers',
                    name='Neutral Sentiment', marker_color='darkgray', marker_size=5), row=3, col=1)
 
     fig.update_layout(height=1200, width=1000)
