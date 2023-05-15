@@ -2,6 +2,7 @@ import dash_bootstrap_components as dbc
 import nltk
 from dash import html, dcc
 from bertopic import BERTopic
+import numpy as np
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import CountVectorizer
 from bs4 import BeautifulSoup
@@ -11,6 +12,7 @@ nltk.download('stopwords')
 german_stop_words = stopwords.words('german')
 german_stop_words.extend(['ja', 'soweit', 'ganz', 'gibts', 'soweit', 'gerne', 'test', 'quiz'])
 vectorizer_model = CountVectorizer(stop_words=german_stop_words)
+np.random.seed(42)  # To get allways the same result.
 topic_model = BERTopic(min_topic_size=6, language="multilingual", vectorizer_model=vectorizer_model)
 
 
@@ -54,22 +56,21 @@ def _get_conversations_as_string(df):
 def get_topic_graph(df):
     conversations = _get_conversations_as_string(df)
     topic_model.fit_transform(conversations)
-    topics = topic_model.get_topics()
     graph = dcc.Graph(id='topic-graph', figure=topic_model.visualize_topics())
-    graph_hierarchy = dcc.Graph(id='topic-hierarchy-graph', figure=topic_model.visualize_hierarchy())
+    graph_bar = dcc.Graph(id='topic-bar-graph', figure=topic_model.visualize_barchart(top_n_topics=20, title=""))
 
     return html.Div(
         [
-            dbc.Card([
-                dbc.CardHeader([html.H5("Topics Visualization", className="mb-1")]),
-                dbc.CardBody([graph])]
-                , style={"padding-bottom": "20px"}),
-            dbc.Card([
-                dbc.CardHeader([html.H5("Topics", className="mb-1")]),
-                dbc.CardBody([graph_hierarchy])]
-            ),
-            dbc.Card([
-                dbc.CardHeader([html.H5("Topics Hierarchy", className="mb-1")]),
-                dbc.CardBody([graph_hierarchy])]
-            )
+            html.Div(
+                [
+                    dbc.Card([
+                        dbc.CardHeader([html.H5("Topics Map", className="mb-1")]),
+                        dbc.CardBody([graph])])
+                ], style={"padding-bottom": "20px"}),
+            html.Div(
+                [
+                    dbc.Card([
+                        dbc.CardHeader([html.H5("Topics", className="mb-1")]),
+                        dbc.CardBody([graph_bar])])
+                ], style={"padding-bottom": "20px"})
         ], style={"padding-bottom": "20px"})
