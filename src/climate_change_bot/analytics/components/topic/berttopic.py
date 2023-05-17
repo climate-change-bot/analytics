@@ -2,6 +2,7 @@ import dash_bootstrap_components as dbc
 import nltk
 from dash import html, dcc
 from bertopic import BERTopic
+from bertopic.representation import MaximalMarginalRelevance
 import numpy as np
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import CountVectorizer
@@ -10,10 +11,14 @@ from markdown import markdown
 
 nltk.download('stopwords')
 german_stop_words = stopwords.words('german')
-german_stop_words.extend(['ja', 'soweit', 'ganz', 'gibts', 'soweit', 'gerne', 'test', 'quiz'])
+german_stop_words.extend(
+    ['ja', 'soweit', 'ganz', 'gibts', 'soweit', 'gerne', 'test', 'quiz', 'c02', 'dmo', '2016', '20', 'bilder',
+     'zurück', 'daher', 'weiterhin'])
 vectorizer_model = CountVectorizer(stop_words=german_stop_words)
 np.random.seed(42)  # To get allways the same result.
-topic_model = BERTopic(min_topic_size=6, language="multilingual", vectorizer_model=vectorizer_model)
+representation_model = MaximalMarginalRelevance(diversity=0.2)
+topic_model = BERTopic(min_topic_size=6, language="multilingual", vectorizer_model=vectorizer_model,
+                       representation_model=representation_model)
 
 
 def _filter_text(text):
