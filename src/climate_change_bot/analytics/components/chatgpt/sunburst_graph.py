@@ -16,7 +16,8 @@ def get_sunburst_graph(df):
 
     fig = px.sunburst(df_chatgpt_answer, path=['chatgpt_correctness_of_content', 'depth_chatgpt_answer'],
                       color='chatgpt_correctness_of_content',
-                      color_discrete_map=color_discrete_map)
+                      color_discrete_map=color_discrete_map,
+                      width=800, height=800)
 
     graph = dcc.Graph(id='sunburst-graph', figure=fig)
 
