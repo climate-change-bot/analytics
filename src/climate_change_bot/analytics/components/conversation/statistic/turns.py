@@ -16,6 +16,7 @@ def get_turns_whiskers(df_1, df_2, df_3):
     fig.add_trace(go.Box(y=turn_counts_3, name='Testphase 3', boxmean=True))
     fig.update_xaxes(title=None)
     fig.update_layout(
+        showlegend=False,
         dragmode=None,
         yaxis=dict(title="Number of Turns", fixedrange=True),
         plot_bgcolor='white',

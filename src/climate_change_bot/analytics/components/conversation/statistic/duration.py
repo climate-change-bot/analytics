@@ -26,6 +26,7 @@ def get_duration_whiskers(df_1, df_2, df_3):
     fig.add_trace(go.Box(y=duration_3['duration_seconds'], name='Testphase 3', boxmean=True))
     fig.update_xaxes(title=None)
     fig.update_layout(
+        showlegend=False,
         dragmode=None,
         yaxis=dict(title="Duration (s)", fixedrange=True),
         plot_bgcolor='white',
