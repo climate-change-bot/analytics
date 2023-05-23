@@ -21,9 +21,18 @@ def get_duration_whiskers(df_1, df_2, df_3):
     duration_3 = _get_durations(df_3)
 
     fig = go.Figure()
-    fig.add_trace(go.Box(y=duration_1['duration_seconds'], name='Testphase 1', boxmean=True))
-    fig.add_trace(go.Box(y=duration_2['duration_seconds'], name='Testphase 2', boxmean=True))
-    fig.add_trace(go.Box(y=duration_3['duration_seconds'], name='Testphase 3', boxmean=True))
+    fig.add_trace(go.Box(y=duration_1['duration_seconds'], name='Testphase 1', boxmean=True,
+                         marker=dict(
+                             color='#D32F2F'
+                         )))
+    fig.add_trace(go.Box(y=duration_2['duration_seconds'], name='Testphase 2', boxmean=True,
+                         marker=dict(
+                             color='#FB8C00'
+                         )))
+    fig.add_trace(go.Box(y=duration_3['duration_seconds'], name='Testphase 3', boxmean=True,
+                         marker=dict(
+                             color='#228B22'
+                         )))
     fig.update_xaxes(title=None)
     fig.update_layout(
         showlegend=False,

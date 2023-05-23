@@ -11,9 +11,18 @@ def get_turns_whiskers(df_1, df_2, df_3):
     number_of_turns, number_of_max_turns, turn_counts_3 = get_turns(df_3)
 
     fig = go.Figure()
-    fig.add_trace(go.Box(y=turn_counts_1, name='Testphase 1', boxmean=True))
-    fig.add_trace(go.Box(y=turn_counts_2, name='Testphase 2', boxmean=True))
-    fig.add_trace(go.Box(y=turn_counts_3, name='Testphase 3', boxmean=True))
+    fig.add_trace(go.Box(y=turn_counts_1, name='Testphase 1', boxmean=True,
+                         marker=dict(
+                             color='#D32F2F'
+                         )))
+    fig.add_trace(go.Box(y=turn_counts_2, name='Testphase 2', boxmean=True,
+                         marker=dict(
+                             color='#FB8C00'
+                         )))
+    fig.add_trace(go.Box(y=turn_counts_3, name='Testphase 3', boxmean=True,
+                         marker=dict(
+                             color='#228B22'
+                         )))
     fig.update_xaxes(title=None)
     fig.update_layout(
         showlegend=False,

@@ -8,6 +8,7 @@ def get_quiz_time_graph(df):
     daily_quiz = df_quiz.groupby('date').size().reset_index().rename(columns={0: 'quiz'})
 
     fig = px.bar(daily_quiz, x='date', y='quiz')
+    fig.update_traces(marker_color='#228B22')
     fig.update_xaxes(title=None)
     fig.update_layout(
         dragmode=None,

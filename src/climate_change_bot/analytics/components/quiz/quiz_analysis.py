@@ -37,8 +37,8 @@ def get_number_of_correct_answer(df):
     y1 = [value[1] for value in answer_counts.values()]
 
     fig = go.Figure(data=[
-        go.Bar(name='First Attempt', x=x, y=y0, marker_color="#636EFA"),
-        go.Bar(name='Further Attempts', x=x, y=y1, marker_color="#EF553B")
+        go.Bar(name='First Attempt', x=x, y=y0, marker_color="#228B22"),
+        go.Bar(name='Further Attempts', x=x, y=y1, marker_color="#B22222")
     ])
 
     fig.update_layout(

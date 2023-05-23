@@ -30,27 +30,27 @@ def get_intent_vs_chatgpt(df):
         x=['Total Intents'],
         y=[total_appropriate],
         name='Correct in Context',
-        marker_color='blue'
+        marker_color='#228B22'
     ))
 
     fig.add_trace(go.Bar(
         x=['Total Intents'],
         y=[total_inappropriate],
         name='Incorrect in Context',
-        marker_color='red'
+        marker_color='#B22222'
     ))
 
     fig.add_trace(go.Bar(
         x=['Total ChatGPT'],
         y=[appropriate_chatgpt],
-        marker_color='blue',
+        marker_color='#228B22',
         showlegend=False
     ))
 
     fig.add_trace(go.Bar(
         x=['Total ChatGPT'],
         y=[not_appropriate_chatgpt],
-        marker_color='red',
+        marker_color='#B22222',
         showlegend=False
     ))
 

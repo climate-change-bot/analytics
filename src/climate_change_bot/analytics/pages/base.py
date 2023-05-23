@@ -5,7 +5,7 @@ import dash_bootstrap_components as dbc
 
 SIDEBAR_STYLE = {
     "position": "fixed",
-    "top": 56,
+    "top": 72,
     "left": 0,
     "bottom": 0,
     "width": "16rem",

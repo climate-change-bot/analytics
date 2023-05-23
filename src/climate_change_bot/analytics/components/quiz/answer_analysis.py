@@ -55,7 +55,7 @@ def get_answer_analysis(df):
 
     fig = sp.make_subplots(rows=len(questions), cols=1, subplot_titles=questions)
 
-    colors = ['#636EFA', '#EF553B', '#EF553B', '#EF553B']
+    colors = ['#228B22', '#B22222', '#B22222', '#B22222']
 
     for i, (question, counts) in enumerate(answer_counts.items()):
         answers, counts = zip(*counts.items())
@@ -69,7 +69,7 @@ def get_answer_analysis(df):
                     marker_color=color,
                     text=count,
                     textposition='auto',
-                    name='Richtig' if j == 0 else 'Falsch',
+                    name='Correct' if j == 0 else 'Wrong',
                     legendgroup="group{}".format(j),
                     showlegend=True if (i == 0 and j < 2) else False
                 ),

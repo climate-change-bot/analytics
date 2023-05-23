@@ -90,6 +90,7 @@ def update_home(value):
 
     fig = px.bar(daily_conversations, x='date', y='conversations')
     fig.update_xaxes(title=None)
+    fig.update_traces(marker_color='#228B22')
     fig.update_layout(
         dragmode=None,
         xaxis=dict(title=None, fixedrange=True),

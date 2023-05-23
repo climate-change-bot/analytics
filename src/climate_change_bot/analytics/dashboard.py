@@ -11,7 +11,7 @@ cache = diskcache.Cache("./cache")
 background_callback_manager = DiskcacheManager(
     cache, cache_by=[lambda: launch_uid], expire=60
 )
-app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP], use_pages=True,
+app = dash.Dash(external_stylesheets=[dbc.themes.FLATLY], use_pages=True,
                 background_callback_manager=background_callback_manager)
 app.config.suppress_callback_exceptions = True
 

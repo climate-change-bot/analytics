@@ -34,14 +34,14 @@ def get_ranking(df):
         x=pivot_df[1],
         name='Correct',
         orientation='h',
-        marker_color='blue'
+        marker_color='#228B22'
     ))
     fig.add_trace(go.Bar(
         y=pivot_df['intent_name'],
         x=pivot_df[0],
         name='Wrong',
         orientation='h',
-        marker_color='red'
+        marker_color='#B22222'
     ))
     fig.update_layout(
         dragmode=None,
