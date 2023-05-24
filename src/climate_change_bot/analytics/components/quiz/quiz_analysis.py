@@ -44,6 +44,7 @@ def get_number_of_correct_answer(df):
     fig.update_layout(
         xaxis=dict(title="Number of correct answers per quiz", fixedrange=True),
         yaxis=dict(title="Frequency", fixedrange=True),
+        plot_bgcolor='white',
         barmode="stack"
     )
 
