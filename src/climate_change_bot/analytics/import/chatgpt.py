@@ -1,3 +1,6 @@
+from climate_change_bot.analytics.store import TIME_CHAT_GPT_USED
+
+
 def add_is_chat_gpt(df):
     print("Add is chatgpt")
     is_chat_gpt = []
@@ -8,7 +11,7 @@ def add_is_chat_gpt(df):
         else:
             is_chat_gpt.append(0)
 
-        is_chat_gpt_answer = row['type_name'] == 'user' and row['timestamp'] > 1677063600 and \
+        is_chat_gpt_answer = row['type_name'] == 'user' and row['timestamp'] > TIME_CHAT_GPT_USED and \
                              row['intent_name'] == 'nlu_fallback'
 
     df['is_chatgpt_answer'] = is_chat_gpt

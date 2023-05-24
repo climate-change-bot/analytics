@@ -8,6 +8,7 @@ from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import CountVectorizer
 from bs4 import BeautifulSoup
 from markdown import markdown
+from climate_change_bot.analytics.store import TIME_CHAT_GPT_USED
 
 nltk.download('stopwords')
 german_stop_words = stopwords.words('german')
@@ -44,7 +45,7 @@ def _get_conversations_as_string(df):
 
     # Filter fallback messages before using chatgpt
     condition_indices = df_documents[
-        ((df_documents.intent == 'nlu_fallback') & (df_documents.timestamp < 1677063600))].index
+        ((df_documents.intent == 'nlu_fallback') & (df_documents.timestamp < TIME_CHAT_GPT_USED))].index
     df_documents = _filter_next_row(df_documents, condition_indices)
 
     # Apply all other filters

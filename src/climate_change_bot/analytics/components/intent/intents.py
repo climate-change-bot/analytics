@@ -2,6 +2,7 @@ import os
 import glob
 import yaml
 import re
+from climate_change_bot.analytics.store import TIME_CHAT_GPT_USED
 
 _nlu_dir = os.environ.get('CHATBOT_NLU_DIR', '/home/roger/Documents/HSLU/Masterthesis/code/chatbot/rasa/data/nlu')
 
@@ -45,6 +46,6 @@ def get_intents():
 
 def get_chatgpt_intents(df, intents):
     intents_as_list = get_intents_as_list(intents)
-    df_chatgpt = df[(df.type_name == 'user') & (df.timestamp > 1677063600) & (df.intent_name == 'nlu_fallback')]
+    df_chatgpt = df[(df.type_name == 'user') & (df.timestamp > TIME_CHAT_GPT_USED) & (df.intent_name == 'nlu_fallback')]
     return [text for text in df_chatgpt['text'].tolist() if
             isinstance(text, str) and _clean_text(text) not in intents_as_list]

@@ -1,6 +1,7 @@
 import dash_bootstrap_components as dbc
 from dash import html, dcc
 import plotly.graph_objects as go
+from climate_change_bot.analytics.store import TIME_CHAT_GPT_USED
 
 
 def _get_counts(index, df):
@@ -21,7 +22,7 @@ def get_intent_vs_chatgpt(df):
     total_appropriate, total_inappropriate = _get_counts(intents_index, df)
 
     chatgpt_index = df[
-        (df.type_name == 'user') & (df.timestamp > 1677063600) & (df.intent_name == 'nlu_fallback')].index
+        (df.type_name == 'user') & (df.timestamp > TIME_CHAT_GPT_USED) & (df.intent_name == 'nlu_fallback')].index
     appropriate_chatgpt, not_appropriate_chatgpt = _get_counts(chatgpt_index, df)
 
     fig = go.Figure()

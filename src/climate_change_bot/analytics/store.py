@@ -3,6 +3,7 @@ import pandas as pd
 
 _file_name = os.environ.get('FILE_NAME', '../../../data/conversations_prod.xlsx')
 
+TIME_CHAT_GPT_USED = 1677063600
 
 class GlobalStore:
     def __init__(self):
