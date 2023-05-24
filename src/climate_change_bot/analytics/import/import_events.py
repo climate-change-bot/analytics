@@ -68,7 +68,7 @@ def _get_latest_timestamp(output_file_name):
 
 def import_events():
     db_name = os.environ.get('DB_NAME', 'rasa')
-    db_user = os.environ.get('DB_User', 'rasa')
+    db_user = os.environ.get('DB_USER', 'rasa')
     db_password = os.environ.get('DB_PASSWORD', 'localhost')
     db_host = os.environ.get('DB_HOST', '127.0.0.1')
     db_port = os.environ.get('DB_PORT', '5432')
